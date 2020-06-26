@@ -2,11 +2,13 @@
 #include "list.h"
 
 /**
- * Vértices 
- *     (USER)    (index)
- * [0] Magrini -> 1, 2 
- * [1] Marlon  -> 0, 2
- * [2] Feliz   -> 0, 1
+ * A ideia do grafo será essa:
+ *     (USER)     (index do usuário)
+ * [0] Magrini -> 1, 2 //Magrini está conectada com Marlon e Feliz
+ * [1] Marlon  -> 0, 2 //Marlon está conectado com Magrini e Feliz
+ * [2] Feliz   -> 0, 1 //Feliz está conectado com Magrini e Marlon
+ * [3] Breno   -> 2    //Breno está conectado com o Feliz
+ * [4] Matheus -> NULL //Matheus não está conectado com ninguém
 */
 
 /*!< Essa struct representa cada vértice */
@@ -31,8 +33,17 @@ struct node_ {
 struct graph_ {
     int number_of_vertices;
     NODE* head;
-    NODE* foot;
 };
+
+NODE* node_create(USER* user) {
+    NODE* node;
+    node = (NODE *) malloc (sizeof(NODE));
+    if(node != NULL) {
+        node->user = user;
+        node->adjacency_list = list_create();
+        node->next = NULL;
+    }
+}
 
 GRAPH* graph_create() {
     int i;
@@ -41,13 +52,8 @@ GRAPH* graph_create() {
     if(graph != NULL) {
         graph->number_of_vertices = 0;
         graph->head = (NODE*) malloc(sizeof(NODE));
-        if(graph->head != NULL) {
-            /*!< Por ser o nó cabeça, não possue dados */
-            graph->head->user = NULL;
-            graph->head->adjacency_list = NULL;
-            graph->head->next = NULL;
-        }
-        graph->foot = graph->head; 
+        if(graph->head != NULL)
+            graph->head = node_create(NULL); /*!< Por ser o nó cabeça, não possue dados */
     }
     return graph;
 }
@@ -71,18 +77,72 @@ void graph_delete(GRAPH** graph) {
     return;
 }
 
-void graph_insert(GRAPH* graph, int convergent, int divergent) {
+void graph_insert_vertex(GRAPH* graph, USER* user) {
     if(graph != NULL) {
-        list_insert(graph->adjacency_list[convergent], divergent); 
-        list_insert(graph->adjacency_list[divergent], convergent); 
+        NODE* node = node_create(user);
+        NODE* previous = graph->head;
+        NODE* current = graph->head->next;
+        while(current != NULL) {
+            previous = current;
+            current = current->next;
+        }
+        previous->next = node;
     }
-    return;
 }
 
-void graph_remove(GRAPH* graph, int convergent, int divergent) {
+/**
+ * Calcula a porcentagem de afinidade.
+*/
+float affinity(USER* user1, USER* user2) {
+    int similar_preferences = 0;
+    
+    if(strcmp(user1->movie, user2->movie) == 0)
+        similar_preferences++;
+
+    if(strcmp(user1->place, user2->place) == 0)
+        similar_preferences++;
+
+    if(strcmp(user1->book, user2->book) == 0)
+        similar_preferences++;
+
+    if(strcmp(user1->hobby, user2->hobby) == 0)
+        similar_preferences++;
+
+    if(strcmp(user1->sport, user2->sport) == 0)
+        similar_preferences++;
+
+    return (similar_preferences*100)/AMOUNT_USER_PARAMETERS;
+} 
+
+void graph_insert_edge(GRAPH* graph, char username1[], char username2[]) {
     if(graph != NULL) {
-        list_remove(graph->adjacency_list[convergent], divergent); 
-        list_remove(graph->adjacency_list[divergent], convergent); 
+        /*!< Procurando nó e o indice do primeiro usuário */
+        NODE* node1 = graph->head->next;
+        int index1 = 0;
+        while(node1 != NULL) {
+            if(strcmp(node1->user->username, username1) == 0)
+                break;
+            index1++;
+            node1 = node1->next;
+        }
+
+        /*!< Procurando nó e o indice do segundo usuário */
+        NODE* node2 = graph->head->next;
+        int index2 = 0;
+        while(node2 != NULL) {
+            if(strcmp(node2->user->username, username2) == 0)
+                break;
+            index2++;
+            node2 = node2->next;
+        }
+
+        /*!< Algum dos usuários não existe */
+        if(node1 == NULL || node2 == NULL) 
+            return;
+
+        float affinity_users = affinity(node1->user, node2->user);
+        list_insert(node1->adjacency_list, index2, affinity_users); 
+        list_insert(node2->adjacency_list, index1, affinity_users); 
     }
     return;
 }
@@ -93,36 +153,13 @@ int graph_number_of_vertices(GRAPH* graph) {
     }
 }
 
-void graph_print_element(GRAPH* graph, int vertex, int adjacent_vertex) {
-     if(graph != NULL) {
-        return list_print_no(graph->adjacency_list[vertex], adjacent_vertex);
-    }
-}
-
-int graph_is_adjacency_list_empty(GRAPH* graph, int vertex) {
-    if(graph != NULL) {
-        return list_size(graph->adjacency_list[vertex]) == 0;
-    }
-}
-
-int graph_first_vertex_list_adjacency(GRAPH* graph, int vertex) {
-    if(graph != NULL) {
-        return list_first_element(graph->adjacency_list[vertex]);
-    }
-}
-
-int graph_next_vertex_list_adjacency(GRAPH* graph, int vertex, int *current_vertex, int *next_vertex) {
-    if(graph != NULL) {
-        return list_next_element(graph->adjacency_list[vertex], current_vertex, next_vertex);
-    }
-}
-
 void graph_print(GRAPH* graph) {
     if(graph != NULL) {
         int i;
-        for(i = 0; i < graph->number_of_vertices; i++) {
-            printf("%d: ", i);
-            list_print(graph->adjacency_list[i]);
+        NODE* aux = graph->head->next;
+        while(aux != NULL) {
+            printf("%s: ", aux->user->username);
+            list_print(aux->adjacency_list);
         }
         printf("\n");
     }
