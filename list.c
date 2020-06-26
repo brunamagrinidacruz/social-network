@@ -1,25 +1,9 @@
 #include "list.h"
 
-#define MAX_SIZE_USERNAME 20
-#define MAX_SIZE_GENDER 10 /*!< 'masculino' ou 'feminino' */
-#define MAX_SIZE_WORD 64
-
-typedef struct user_ {
-    char username[MAX_SIZE_USERNAME];
-    char gender[MAX_SIZE_GENDER];
-    int age;
-    /*!< Opções favoritas */
-    char movie[MAX_SIZE_WORD];
-    char place[MAX_SIZE_WORD];
-    char book[MAX_SIZE_WORD];
-    char hobby[MAX_SIZE_WORD];
-    char sport[MAX_SIZE_WORD];
-} USER;
-
 typedef struct node_ NODE;
 
 struct node_ {
-    USER* user;
+    int index;
     NODE* next;
 };
 
@@ -29,10 +13,10 @@ struct list_ {
     NODE* foot;
 };
 
-NODE* node_create(USER* user) {
+NODE* node_create(int index) {
     NODE* node = (NODE *) malloc (sizeof(NODE));
     if(node != NULL) {
-        node->user = user;
+        node->index = index;
         node->next = NULL;
     }
     return node;
@@ -43,7 +27,7 @@ LIST* list_create() {
     list = (LIST *) malloc(sizeof(LIST));
     if(list != NULL) {
         list->size = 0;
-        list->head = node_create(NULL);
+        list->head = node_create(-1);
         list->foot = list->head;
     }
     return list;
@@ -55,8 +39,6 @@ void list_delete(LIST** list) {
         NODE* next;
         while(current != NULL) {
             next = current->next;
-            if(current->user != NULL)
-                free(current->user);
             free(current);
             current = next;
         }
@@ -66,14 +48,14 @@ void list_delete(LIST** list) {
     return;
 }
 
-void list_insert(LIST* list, USER* user) {
+void list_insert(LIST* list, int index) {
     if(list != NULL) {
         NODE* aux = list->head->next;
         while(aux != NULL) {
-            if(aux->user->username == user->username) return;
+            if(aux->index == index) return;
             aux = aux->next;
         }
-        NODE* new = no_create(user);
+        NODE* new = no_create(index);
         list->foot->next = new;
         list->foot = new;
         list->size++;
@@ -92,7 +74,7 @@ void list_print(LIST* list) {
         int i;
         NODE* aux = list->head->next;
         while(aux != NULL) {
-            printf("%s ", aux->user->username);
+            printf("%d ", aux->index);
             aux = aux->next;
         }
         printf("\n");       
