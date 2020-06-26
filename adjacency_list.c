@@ -1,9 +1,18 @@
 #include "adjacency_list.h"
 #include "list.h"
 
+/**
+ * Vértices 
+ *     (USER)    (index)
+ * [0] Magrini -> 1, 2 
+ * [1] Marlon  -> 0, 2
+ * [2] Feliz   -> 0, 1
+*/
+
 /*!< Essa struct representa cada vértice */
 typedef struct node_ NODE;
 struct node_ {
+    USER* user;
     LIST* adjacency_list; 
     NODE* next;
 };
@@ -33,6 +42,8 @@ GRAPH* graph_create() {
         graph->number_of_vertices = 0;
         graph->head = (NODE*) malloc(sizeof(NODE));
         if(graph->head != NULL) {
+            /*!< Por ser o nó cabeça, não possue dados */
+            graph->head->user = NULL;
             graph->head->adjacency_list = NULL;
             graph->head->next = NULL;
         }
@@ -49,6 +60,8 @@ void graph_delete(GRAPH** graph) {
         while(current != NULL) {
             next = current->next;
             list_delete(current->adjacency_list);
+            if(current->user != NULL) 
+                free(current->user);
             free(current);
             current = next;
         }
