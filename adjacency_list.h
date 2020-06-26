@@ -3,25 +3,9 @@
 
     #include <stdlib.h>
     #include <string.h>
+    #include "user.h"
 
     typedef struct graph_ GRAPH;
-
-    #define AMOUNT_USER_PARAMETERS 5
-    #define MAX_SIZE_USERNAME 20
-    #define MAX_SIZE_GENDER 10 /*!< 'masculino' ou 'feminino' */
-    #define MAX_SIZE_WORD 64
-
-    typedef struct user_ {
-        char username[MAX_SIZE_USERNAME];
-        char gender[MAX_SIZE_GENDER];
-        int age;
-        /*!< Opções favoritas */
-        char movie[MAX_SIZE_WORD];
-        char place[MAX_SIZE_WORD];
-        char book[MAX_SIZE_WORD];
-        char hobby[MAX_SIZE_WORD];
-        char sport[MAX_SIZE_WORD];
-    } USER;
 
     GRAPH* graph_create();
     void graph_delete(GRAPH** graph);

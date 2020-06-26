@@ -33,6 +33,7 @@ struct node_ {
 struct graph_ {
     int number_of_vertices;
     NODE* head;
+    NODE* foot;
 };
 
 NODE* node_create(USER* user) {
@@ -51,9 +52,8 @@ GRAPH* graph_create() {
     graph = (GRAPH *) malloc(sizeof(GRAPH));
     if(graph != NULL) {
         graph->number_of_vertices = 0;
-        graph->head = (NODE*) malloc(sizeof(NODE));
-        if(graph->head != NULL)
-            graph->head = node_create(NULL); /*!< Por ser o nó cabeça, não possue dados */
+        graph->head = node_create(NULL); /*!< Por ser o nó cabeça, não possue dados */
+        graph->foot = graph->head;
     }
     return graph;
 }
@@ -65,9 +65,9 @@ void graph_delete(GRAPH** graph) {
         NODE* next;
         while(current != NULL) {
             next = current->next;
-            list_delete(current->adjacency_list);
+            list_delete(&current->adjacency_list);
             if(current->user != NULL) 
-                free(current->user);
+                user_delete(&current->user);
             free(current);
             current = next;
         }
@@ -80,47 +80,20 @@ void graph_delete(GRAPH** graph) {
 void graph_insert_vertex(GRAPH* graph, USER* user) {
     if(graph != NULL) {
         NODE* node = node_create(user);
-        NODE* previous = graph->head;
-        NODE* current = graph->head->next;
-        while(current != NULL) {
-            previous = current;
-            current = current->next;
-        }
-        previous->next = node;
+        graph->foot->next = node;
+        graph->foot = node;
+        graph->number_of_vertices++;
     }
 }
 
-/**
- * Calcula a porcentagem de afinidade.
-*/
-float affinity(USER* user1, USER* user2) {
-    int similar_preferences = 0;
-    
-    if(strcmp(user1->movie, user2->movie) == 0)
-        similar_preferences++;
-
-    if(strcmp(user1->place, user2->place) == 0)
-        similar_preferences++;
-
-    if(strcmp(user1->book, user2->book) == 0)
-        similar_preferences++;
-
-    if(strcmp(user1->hobby, user2->hobby) == 0)
-        similar_preferences++;
-
-    if(strcmp(user1->sport, user2->sport) == 0)
-        similar_preferences++;
-
-    return (similar_preferences*100)/AMOUNT_USER_PARAMETERS;
-} 
-
+ 
 void graph_insert_edge(GRAPH* graph, char username1[], char username2[]) {
     if(graph != NULL) {
         /*!< Procurando nó e o indice do primeiro usuário */
         NODE* node1 = graph->head->next;
         int index1 = 0;
         while(node1 != NULL) {
-            if(strcmp(node1->user->username, username1) == 0)
+            if(strcmp(user_username(node1->user), username1) == 0)
                 break;
             index1++;
             node1 = node1->next;
@@ -130,7 +103,7 @@ void graph_insert_edge(GRAPH* graph, char username1[], char username2[]) {
         NODE* node2 = graph->head->next;
         int index2 = 0;
         while(node2 != NULL) {
-            if(strcmp(node2->user->username, username2) == 0)
+            if(strcmp(user_username(node2->user), username2) == 0)
                 break;
             index2++;
             node2 = node2->next;
@@ -158,7 +131,7 @@ void graph_print(GRAPH* graph) {
         int i;
         NODE* aux = graph->head->next;
         while(aux != NULL) {
-            printf("%s: ", aux->user->username);
+            printf("%s: ", user_username(aux->user));
             list_print(aux->adjacency_list);
         }
         printf("\n");
