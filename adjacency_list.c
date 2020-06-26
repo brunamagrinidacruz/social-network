@@ -115,7 +115,6 @@ void graph_insert_edge(GRAPH* graph, char username1[], char username2[]) {
             return;
 
         float affinity_users = affinity(node1->user, node2->user);
-        printf("affinity: %.2f\n", affinity_users);
         list_insert(node1->adjacency_list, index2, affinity_users); 
         list_insert(node2->adjacency_list, index1, affinity_users); 
     }
