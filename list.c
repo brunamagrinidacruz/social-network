@@ -4,6 +4,7 @@ typedef struct node_ NODE;
 
 struct node_ {
     int index;
+    float weight; /*!< Representa a afinidade */
     NODE* next;
 };
 
@@ -13,10 +14,11 @@ struct list_ {
     NODE* foot;
 };
 
-NODE* node_create(int index) {
+NODE* node_create(int index, float weight) {
     NODE* node = (NODE *) malloc (sizeof(NODE));
     if(node != NULL) {
         node->index = index;
+        node->weight = weight;
         node->next = NULL;
     }
     return node;
@@ -27,7 +29,7 @@ LIST* list_create() {
     list = (LIST *) malloc(sizeof(LIST));
     if(list != NULL) {
         list->size = 0;
-        list->head = node_create(-1);
+        list->head = node_create(-1, 0);
         list->foot = list->head;
     }
     return list;
@@ -48,14 +50,14 @@ void list_delete(LIST** list) {
     return;
 }
 
-void list_insert(LIST* list, int index) {
+void list_insert(LIST* list, int index, float weight) {
     if(list != NULL) {
         NODE* aux = list->head->next;
         while(aux != NULL) {
             if(aux->index == index) return;
             aux = aux->next;
         }
-        NODE* new = no_create(index);
+        NODE* new = no_create(index, weight);
         list->foot->next = new;
         list->foot = new;
         list->size++;
@@ -76,8 +78,7 @@ void list_print(LIST* list) {
         while(aux != NULL) {
             printf("%d ", aux->index);
             aux = aux->next;
-        }
-        printf("\n");       
+        }      
     }
     return;
 }
