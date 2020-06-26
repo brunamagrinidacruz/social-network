@@ -107,7 +107,7 @@ void user_print(USER* user) {
 
 void user_delete(USER** user) {
     if (user != NULL) {
-        free(user);
+        free(*user);
         user = NULL;
     }
     return;

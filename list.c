@@ -76,7 +76,7 @@ void list_print(LIST* list) {
         int i;
         NODE* aux = list->head->next;
         while(aux != NULL) {
-            printf("%d ", aux->index);
+            printf("Index: %d Weight: %.2f | ", aux->index, aux->weight);
             aux = aux->next;
         }      
     }

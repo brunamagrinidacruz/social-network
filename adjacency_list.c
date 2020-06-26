@@ -65,9 +65,10 @@ void graph_delete(GRAPH** graph) {
         NODE* next;
         while(current != NULL) {
             next = current->next;
-            list_delete(&current->adjacency_list);
+            if(current->adjacency_list != NULL)
+                list_delete(&(current->adjacency_list));
             if(current->user != NULL) 
-                user_delete(&current->user);
+                user_delete(&(current->user));
             free(current);
             current = next;
         }
@@ -114,6 +115,7 @@ void graph_insert_edge(GRAPH* graph, char username1[], char username2[]) {
             return;
 
         float affinity_users = affinity(node1->user, node2->user);
+        printf("affinity: %.2f\n", affinity_users);
         list_insert(node1->adjacency_list, index2, affinity_users); 
         list_insert(node2->adjacency_list, index1, affinity_users); 
     }
@@ -133,6 +135,8 @@ void graph_print(GRAPH* graph) {
         while(aux != NULL) {
             printf("%s: ", user_username(aux->user));
             list_print(aux->adjacency_list);
+            aux = aux->next;
+            printf("\n");
         }
         printf("\n");
     }

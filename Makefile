@@ -4,16 +4,16 @@ run: main
 	./main
 
 main: user.o list.o adjacency_list.o main.o
-	gcc user.o list.o adjacency_list.o main.o -o main
+	gcc -g user.o list.o adjacency_list.o main.o -o main
 
 main.o: main.c
-	gcc main.c -c
+	gcc -g main.c -c
 
 adjacency_list.o: adjacency_list.c
-	gcc adjacency_list.c -c
+	gcc -g adjacency_list.c -c
 
 list.o: list.c
-	gcc list.c -c
+	gcc -g list.c -c
 
 user.o: user.c
-	gcc user.c -c
+	gcc -g user.c -c
