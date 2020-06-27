@@ -3,7 +3,8 @@
 typedef struct node_ NODE;
 
 struct node_ {
-    int index;
+    USER* user;
+    float weight; /*!< Representa a afinidade em porcentagem */
     NODE* next;
 };
 
@@ -13,10 +14,11 @@ struct list_ {
     NODE* foot;
 };
 
-NODE* node_create(int index) {
+NODE* list_node_create(USER* user, float weight) {
     NODE* node = (NODE *) malloc (sizeof(NODE));
     if(node != NULL) {
-        node->index = index;
+        node->user = user;
+        node->weight = weight;
         node->next = NULL;
     }
     return node;
@@ -27,7 +29,7 @@ LIST* list_create() {
     list = (LIST *) malloc(sizeof(LIST));
     if(list != NULL) {
         list->size = 0;
-        list->head = node_create(-1);
+        list->head = list_node_create(NULL, 0);
         list->foot = list->head;
     }
     return list;
@@ -48,14 +50,14 @@ void list_delete(LIST** list) {
     return;
 }
 
-void list_insert(LIST* list, int index) {
+void list_insert(LIST* list, USER* user, float weight) {
     if(list != NULL) {
         NODE* aux = list->head->next;
         while(aux != NULL) {
-            if(aux->index == index) return;
+            if(strcmp(user_username(aux->user), user_username(user)) == 0) return;
             aux = aux->next;
         }
-        NODE* new = no_create(index);
+        NODE* new = list_node_create(user, weight);
         list->foot->next = new;
         list->foot = new;
         list->size++;
@@ -74,10 +76,9 @@ void list_print(LIST* list) {
         int i;
         NODE* aux = list->head->next;
         while(aux != NULL) {
-            printf("%d ", aux->index);
+            printf("Usuário: %s Weight: %.2f | ", user_username(aux->user), aux->weight);
             aux = aux->next;
-        }
-        printf("\n");       
+        }      
     }
     return;
 }

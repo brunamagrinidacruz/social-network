@@ -27,6 +27,30 @@ USER* user_create(char username[MAX_SIZE_USERNAME], char gender[MAX_SIZE_GENDER]
     return user;
 }
 
+/**
+ * Calcula a porcentagem de afinidade.
+*/
+float affinity(USER* user1, USER* user2) {
+    int similar_preferences = 0;
+    
+    if(strcmp(user1->movie, user2->movie) == 0)
+        similar_preferences++;
+
+    if(strcmp(user1->place, user2->place) == 0)
+        similar_preferences++;
+
+    if(strcmp(user1->book, user2->book) == 0)
+        similar_preferences++;
+
+    if(strcmp(user1->hobby, user2->hobby) == 0)
+        similar_preferences++;
+
+    if(strcmp(user1->sport, user2->sport) == 0)
+        similar_preferences++;
+
+    return (similar_preferences*100)/AMOUNT_USER_PARAMETERS;
+}
+
 int user_age(USER* user) {
     if (user != NULL) 
         return user->age;
@@ -83,7 +107,7 @@ void user_print(USER* user) {
 
 void user_delete(USER** user) {
     if (user != NULL) {
-        free(user);
+        free(*user);
         user = NULL;
     }
     return;
