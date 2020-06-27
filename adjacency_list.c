@@ -2,13 +2,28 @@
 #include "list.h"
 
 /**
- * A ideia do grafo será essa:
+ * A primeira ideia do grafo foi armazenar na aresta o indice de quem a pessoa estava relacionada.
+ * Entretanto, ao fazer uma análise em uma pessoa em especifico (um vértice da lista),
+ * se quisessemos obter informações sobre a pessoa com quem está conectado, seria necessário
+ * percorrer a lista de usuários novamente (tendo em vista que é uma lista dinâmica)
+ * para encontrar as informações da pessoa associada. Por isso, decidimos optar por em cada aresta,
+ * armazenar o endereço da pessoa com quem está se relacionando.
  *     (USER)     (index do usuário)
  * [0] Magrini -> 1, 2 //Magrini está conectada com Marlon e Feliz
  * [1] Marlon  -> 0, 2 //Marlon está conectado com Magrini e Feliz
- * [2] Feliz   -> 0, 1 //Feliz está conectado com Magrini e Marlon
+ * [2] Feliz   -> 0, 1, 3 //Feliz está conectado com Magrini e Marlon
  * [3] Breno   -> 2    //Breno está conectado com o Feliz
  * [4] Matheus -> NULL //Matheus não está conectado com ninguém
+*/
+
+/**
+ * A ideia do grafo será essa:
+ *     (USER)  (Endereço do usuáro)
+ * Magrini -> &Marlon, &Feliz, &Matheus 
+ * Marlon  -> &Magrini, &Feliz
+ * Feliz   -> &Marlon, &Magrini, &Breno
+ * Breno   -> &Feliz   
+ * Matheus -> &Magrini
 */
 
 /*!< Essa struct representa cada vértice */
@@ -90,23 +105,19 @@ void graph_insert_vertex(GRAPH* graph, USER* user) {
  
 void graph_insert_edge(GRAPH* graph, char username1[], char username2[]) {
     if(graph != NULL) {
-        /*!< Procurando nó e o indice do primeiro usuário */
+        /*!< Procurando nó do primeiro usuário */
         NODE* node1 = graph->head->next;
-        int index1 = 0;
         while(node1 != NULL) {
             if(strcmp(user_username(node1->user), username1) == 0)
                 break;
-            index1++;
             node1 = node1->next;
         }
 
-        /*!< Procurando nó e o indice do segundo usuário */
+        /*!< Procurando nó do segundo usuário */
         NODE* node2 = graph->head->next;
-        int index2 = 0;
         while(node2 != NULL) {
             if(strcmp(user_username(node2->user), username2) == 0)
                 break;
-            index2++;
             node2 = node2->next;
         }
 
@@ -115,8 +126,8 @@ void graph_insert_edge(GRAPH* graph, char username1[], char username2[]) {
             return;
 
         float affinity_users = affinity(node1->user, node2->user);
-        list_insert(node1->adjacency_list, index2, affinity_users); 
-        list_insert(node2->adjacency_list, index1, affinity_users); 
+        list_insert(node1->adjacency_list, node2->user, affinity_users); 
+        list_insert(node2->adjacency_list, node1->user, affinity_users); 
     }
     return;
 }
