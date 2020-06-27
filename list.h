@@ -11,9 +11,11 @@
     LIST* list_create();
     void list_delete(LIST** list);
 
-    void list_insert(LIST* list, USER* user, float weight);
+    int list_insert(LIST* list, USER* user, float affinity);
 
     int list_size(LIST* list);
     void list_print(LIST* list);
+
+    int list_search_user(LIST* list, USER* user);
 
 #endif

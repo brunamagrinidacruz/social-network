@@ -7,6 +7,7 @@
 #define FRIENDSHIP_SUGGESTION 2
 #define DETECT_LOW_AFFINITY 3
 #define IDENTIFY_USER_PROFILE 4
+#define PRINT_SOCIAL_NETWORK 5
 
 void print_menu() {
     printf("------------------------------------\n");
@@ -14,6 +15,7 @@ void print_menu() {
     printf("%d - Sugestão de 'amigos de verdade'\n", FRIENDSHIP_SUGGESTION);
     printf("%d - Detectar baixa afinidade\n", DETECT_LOW_AFFINITY);
     printf("%d - Identificar perfil dos usuários\n", IDENTIFY_USER_PROFILE);
+    printf("%d - Imprimir rede social\n", PRINT_SOCIAL_NETWORK);
     printf("%d - Sair\n", END);
     printf("------------------------------------\n");
 }
@@ -21,6 +23,7 @@ void print_menu() {
 int main(void) {
 
     GRAPH* graph = graph_create();
+    char username1[MAX_SIZE_USERNAME], username2[MAX_SIZE_USERNAME];
 
     USER* magrini = user_create("Bruna\0", "feminino\0", 19, "barbie\0", "bar do zé\0", "1984\0", "cinema\0", "corrida\0");
     USER* marlon = user_create("Marlon\0", "masculino\0", 19, "vingadores\0", "praça xv\0", "feliz ano velho\0", "leitura\0", "ping pong\0");
@@ -42,10 +45,14 @@ int main(void) {
     while(operation != END) {
         switch(operation) {
             case SEND_INVITE:
-                printf("1\n");
+                graph_print_users(graph);
+                printf("Amizade entre os usuários: ");
+                scanf("%s %s", username1, username2);
+                if (!graph_insert_edge(graph, username1, username2))
+                    printf("Falha ao fazer a amizade.\n");
                 break;
             case FRIENDSHIP_SUGGESTION:
-                printf("2\n");
+                
                 break;
             case DETECT_LOW_AFFINITY:
                 printf("3\n");
@@ -55,6 +62,9 @@ int main(void) {
                 break;
             case END:
                 printf("Até a próxima!\n");
+                break;
+            case PRINT_SOCIAL_NETWORK: //imprimir o grafo
+                graph_print(graph);
                 break;
             default:
                 printf("Operação inválida!\n");

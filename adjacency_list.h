@@ -11,9 +11,10 @@
     void graph_delete(GRAPH** graph);
 
     void graph_insert_vertex(GRAPH* graph, USER* user);
-    void graph_insert_edge(GRAPH* graph, char username1[], char username2[]);
+    int graph_insert_edge(GRAPH* graph, char username1[], char username2[]);
     
     int graph_number_of_vertices(GRAPH* graph);
     void graph_print(GRAPH* graph);
+    void graph_print_users(GRAPH* graph);
     
 #endif

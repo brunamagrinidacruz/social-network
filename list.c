@@ -50,19 +50,16 @@ void list_delete(LIST** list) {
     return;
 }
 
-void list_insert(LIST* list, USER* user, float weight) {
+int list_insert(LIST* list, USER* user, float affinity) {
     if(list != NULL) {
-        NODE* aux = list->head->next;
-        while(aux != NULL) {
-            if(strcmp(user_username(aux->user), user_username(user)) == 0) return;
-            aux = aux->next;
-        }
-        NODE* new = list_node_create(user, weight);
+        NODE* new = list_node_create(user, affinity);
         list->foot->next = new;
         list->foot = new;
         list->size++;
+
+        return 1;
     }
-    return;
+    return 0;
 }
 
 int list_size(LIST* list) {
@@ -76,9 +73,28 @@ void list_print(LIST* list) {
         int i;
         NODE* aux = list->head->next;
         while(aux != NULL) {
-            printf("Usuário: %s Weight: %.2f | ", user_username(aux->user), aux->weight);
+            printf("  Usuário: %s com afinidade de %.2f%% \n", user_username(aux->user), aux->weight);
             aux = aux->next;
         }      
     }
     return;
+}
+
+int list_empty(LIST* list) {
+    if (list != NULL && list->size > 0)
+        return 0;
+    return 1;
+}
+
+int list_search_user(LIST* list, USER* user) {
+    if (!list_empty(list)) {
+        NODE* node = list->head->next;
+
+        while (node != NULL && node->user != user)
+            node = node->next;
+
+        if (node != NULL)
+            return 1;
+    }
+    return 0;
 }

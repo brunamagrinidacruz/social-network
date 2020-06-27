@@ -102,34 +102,60 @@ void graph_insert_vertex(GRAPH* graph, USER* user) {
     }
 }
 
+int graph_empty(GRAPH* graph) {
+    if (graph != NULL && graph->number_of_vertices > 0)
+        return 0;
+    return 1;
+}
  
-void graph_insert_edge(GRAPH* graph, char username1[], char username2[]) {
-    if(graph != NULL) {
+NODE* graph_search_node(GRAPH* graph, char username[]) {
+    if (!graph_empty(graph)) {
+        NODE* node = graph->head->next;
+
+        while (node != NULL && strcmp(user_username(node->user), username) != 0)
+            node = node->next;
+
+        if (node != NULL)
+            return node;
+    }
+    return NULL;
+}
+
+int graph_insert_edge(GRAPH* graph, char username1[], char username2[]) {
+    if(!graph_empty(graph)) {
         /*!< Procurando nó do primeiro usuário */
-        NODE* node1 = graph->head->next;
-        while(node1 != NULL) {
-            if(strcmp(user_username(node1->user), username1) == 0)
-                break;
-            node1 = node1->next;
-        }
+        NODE* node1 = graph_search_node(graph, username1);
 
         /*!< Procurando nó do segundo usuário */
-        NODE* node2 = graph->head->next;
-        while(node2 != NULL) {
-            if(strcmp(user_username(node2->user), username2) == 0)
-                break;
-            node2 = node2->next;
-        }
+        NODE* node2 = graph_search_node(graph, username2);
 
         /*!< Algum dos usuários não existe */
         if(node1 == NULL || node2 == NULL) 
-            return;
+            return 0;
+
+        if (list_search_user(node1->adjacency_list, node2->user)) {
+            printf("Os usuários já são amigos.\n");
+            return 1;
+        }
 
         float affinity_users = affinity(node1->user, node2->user);
-        list_insert(node1->adjacency_list, node2->user, affinity_users); 
-        list_insert(node2->adjacency_list, node1->user, affinity_users); 
+        int request;
+
+        printf("A chance dessa amizade ser verdadeira é de %.2f%%\n", affinity_users);
+        printf("O usuário %s deseja aceitar a solicitação? (1 - Sim, 0 - Não): ", username2);
+        scanf("%d", &request);
+
+        if (!request) {
+            printf("Amizade recusada.\n");
+        } else {
+            /*!< Verificando se a nova amizade foi realizada com sucesso */
+            if (!list_insert(node1->adjacency_list, node2->user, affinity_users) || !list_insert(node2->adjacency_list, node1->user, affinity_users)) 
+                return 0;
+            printf("Amizade feita com sucesso.\n");
+        }
+        return 1;
     }
-    return;
+    return 0;
 }
 
 int graph_number_of_vertices(GRAPH* graph) {
@@ -143,12 +169,24 @@ void graph_print(GRAPH* graph) {
         int i;
         NODE* aux = graph->head->next;
         while(aux != NULL) {
-            printf("%s: ", user_username(aux->user));
+            printf("Lista de amizade do usuário %s:\n", user_username(aux->user));
             list_print(aux->adjacency_list);
             aux = aux->next;
             printf("\n");
         }
         printf("\n");
+    }
+    return;
+}
+
+void graph_print_users(GRAPH* graph) {
+    if (!graph_empty(graph)) {
+        NODE* node = graph->head->next;
+
+        while (node != NULL) {
+            printf("Nome do usuário: %s\n", user_username(node->user));
+            node = node->next;
+        }
     }
     return;
 }
