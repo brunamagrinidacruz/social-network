@@ -174,7 +174,6 @@ void graph_print(GRAPH* graph) {
             aux = aux->next;
             printf("\n");
         }
-        printf("\n");
     }
     return;
 }

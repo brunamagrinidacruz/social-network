@@ -9,6 +9,8 @@
 #define IDENTIFY_USER_PROFILE 4
 #define PRINT_SOCIAL_NETWORK 5
 
+#define SIZE_TEXT 64
+
 void print_menu() {
     printf("------------------------------------\n");
     printf("%d - Enviar convite\n", SEND_INVITE);
@@ -20,25 +22,115 @@ void print_menu() {
     printf("------------------------------------\n");
 }
 
+/**
+ * Função responsável por ler uma linha.
+ * Recebe o arquivo que será lido 
+ * e o parâmetro value que é prenchido na função com o conteúdo da linha a partir dos dois pontos (:).
+ * Exemplo: caso a linha seja 'nome do usuário: beltrano', value será 'beltrano'.
+*/
+void read_line(FILE* file, char value[]) {
+    char byte;
+    int index = 0;
+    int findInitValue = 0;
+    while(1) {
+        fread(&byte, 1, sizeof(char), file);
+
+        if(byte == '\n') {  /*!< Encontrou o fim da linha */
+            value[index] = '\0';
+            break;
+        }
+
+        /**
+         *  Enquanto não encontrou os dois pontos, é só o nome do campo.
+         *  Quanto encontrou os dois pontos e não foi achado antes, então irá começar o valor.
+         * */
+        if(!findInitValue && byte == ':') {
+            findInitValue = 1;
+            fread(&byte, 1, sizeof(char), file); /*!< Lendo o espaço entre os dois pontos e o valor do campo */
+            /*!< Se o espaço existir, ler o primeiro caractere do valor. Se não, o byte lido é o primeiro caractere do valor */
+            if(byte == ' ') fread(&byte, 1, sizeof(char), file);
+        }
+
+        if(findInitValue) {
+            value[index] = byte;
+            index++;
+        }
+    }
+
+}
+
+/**
+ * Função responsável por pular uma linha.
+ * Retorna o arquivo que vai pular a linha e um inteiro que informa se o arquivo acabou ou não.
+*/
+int jump_line(FILE* file){
+    char byte;
+    return fread(&byte, 1, sizeof(char), file);
+}
+
+/**
+ * Função responsável por ler o arquivo e inserir os valores iniciais no grafo.
+ * Recebe como parametro o grafo onde serão inseridos os usuários.
+ * O arquivo deve conter os 7 itens para cada usuário: nome, gênero, idade, filme, local, livro, hobby e esporte em ordem
+ * e deve ter um espaço entre cada usuário. No usuário final, deve ter um espaço também.
+ * O arquivo não pode estar vazio.
+*/
+void initialize_profiles(GRAPH* graph) {
+    if(graph != NULL) {
+        FILE* file;
+        char file_name[SIZE_TEXT];
+        
+        USER* user;
+        char username[MAX_SIZE_USERNAME];
+        char gender[MAX_SIZE_GENDER];
+        char age[4]; /*!< O tamanho máximo de uma idade seria 3 digitos (até 150) e mais um para o \0 */
+        char movie[MAX_SIZE_WORD];
+        char place[MAX_SIZE_WORD];
+        char book[MAX_SIZE_WORD];
+        char hobby[MAX_SIZE_WORD];
+        char sport[MAX_SIZE_WORD];
+
+        printf("Digite o nome do arquivo que contém os perfis dos usuários: ");
+        scanf("%s", file_name);
+
+        file = fopen(file_name, "r");
+        
+        if(file != NULL) {
+            int hasRows = 1;
+            while(hasRows) {
+                /*!< Lendo o nome de usuário */
+                read_line(file, username);
+                /*!< Lendo o gênero */
+                read_line(file, gender);
+                /*!< Lendo a idade */
+                read_line(file, age);
+                /*!< Lendo o filme favorito */
+                read_line(file, movie);
+                /*!< Lendo o place favorito */
+                read_line(file, place);
+                /*!< Lendo o book favorito */
+                read_line(file, book);
+                /*!< Lendo o hobby favorito */
+                read_line(file, hobby);
+                /*!< Lendo o sport favorito */
+                read_line(file, sport);
+                user = user_create(username, gender, atoi(age), movie, place, book, hobby, sport);
+                graph_insert_vertex(graph, user);
+                hasRows = jump_line(file);
+            }
+        }
+
+      fclose(file);
+    }
+}
+
 int main(void) {
 
     GRAPH* graph = graph_create();
     char username1[MAX_SIZE_USERNAME], username2[MAX_SIZE_USERNAME];
 
-    USER* magrini = user_create("Bruna\0", "feminino\0", 19, "barbie\0", "bar do zé\0", "1984\0", "cinema\0", "corrida\0");
-    USER* marlon = user_create("Marlon\0", "masculino\0", 19, "vingadores\0", "praça xv\0", "feliz ano velho\0", "leitura\0", "ping pong\0");
-    USER* feliz = user_create("Feliz\0", "masculino\0", 21, "barbie\0", "usp\0", "design is my passion\0", "lol\0", "lol\0");
-    USER* wellington = user_create("Wellington\0", "masculino\0", 21, "barbie\0", "usp\0", "design is my passion\0", "lol\0", "lol\0");
-
-    graph_insert_vertex(graph, magrini);
-    graph_insert_vertex(graph, marlon);
-    graph_insert_vertex(graph, feliz);
-    graph_insert_vertex(graph, wellington);
-
-    graph_insert_edge(graph, "Bruna\0", "Marlon\0");
-    graph_insert_edge(graph, "Bruna\0", "Feliz\0");
-
-    graph_print(graph);
+    /*!< Ler arquivo de dados que contem os perfils */
+    initialize_profiles(graph);
 
     int operation;
     print_menu();
@@ -67,7 +159,7 @@ int main(void) {
             case END:
                 printf("Até a próxima!\n");
                 break;
-            case PRINT_SOCIAL_NETWORK: //imprimir o grafo
+            case PRINT_SOCIAL_NETWORK:
                 graph_print(graph);
                 break;
             default:
