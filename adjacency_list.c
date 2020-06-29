@@ -195,20 +195,25 @@ void graph_print_users(GRAPH* graph) {
     return;
 }
 
+/**
+ * Função responsável por sugerir possíveis amizades verdadeiras de cada usuário no grafo
+ */
 int graph_friendship_suggestion(GRAPH* graph) {
     if (!graph_empty(graph)) {
-        int n_friendship;
+        int n_friendship; /*!< número de sugestão de amizade verdadeira*/
         float affinity_users;
-        NODE* node = graph->head->next;
-        NODE* node_possible_friend;
+        NODE* node = graph->head->next; /*!< nó inicial para começar a percorrer o grafo */
+        NODE* node_possible_friend; /*!< nó para comparar os demais nó do grafo */
 
         while (node != NULL) {
             printf("Sugestão de amizadade verdadeira para o usuário %s:\n", user_username(node->user));
             n_friendship = 0;
             node_possible_friend = graph->head->next;
             while (node_possible_friend != NULL) {
+                /*!< Verifica se o usuário já existe na lista de amigo deste nó e se são o mesmo nó */
                 if (!list_search_user(node->adjacency_list, node_possible_friend->user) && node_possible_friend != node) {
                     affinity_users = affinity(node->user, node_possible_friend->user);
+                    /*!< Se afinidade >= amizade verdadeira (60.00) */
                     if (affinity_users >= TRUE_FRIENDSHIP) {
                         printf("  %s, afinidade = %.2f%%\n\n", user_username(node_possible_friend->user), affinity_users);
                         n_friendship++;
@@ -228,12 +233,16 @@ int graph_friendship_suggestion(GRAPH* graph) {
     return 0;
 }
 
+/*
+ * Função responsável por detectar amizade de baixa afinidade de cada usuário no grafo.
+ */
 int graph_detect_low_affinity(GRAPH* graph) {
     if (!graph_empty(graph)) {
         NODE* node = graph->head->next;
 
         while (node != NULL) {
             printf("Amizades de baixa afinidade do usuário %s:\n", user_username(node->user));
+            /*!< Chama a função que percorre a lista de adjacência desse usuário e imprime as amizades de baixa afinidade */
             if(!list_friendship_low_affinity(node->adjacency_list, node->user))
                 printf("  Nenhuma amizade de baixa afinidade.\n");
             printf("\n");

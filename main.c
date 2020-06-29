@@ -129,7 +129,7 @@ int main(void) {
     GRAPH* graph = graph_create();
     char username1[MAX_SIZE_USERNAME], username2[MAX_SIZE_USERNAME];
 
-    /*!< Ler arquivo de dados que contem os perfils */
+    /*!< Ler arquivo de dados que contem os perfis */
     initialize_profiles(graph);
 
     int operation;
