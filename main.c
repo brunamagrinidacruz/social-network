@@ -155,7 +155,7 @@ int main(void) {
                 break;
             case IDENTIFY_USER_PROFILE:
                 if(!graph_identify_user_profile(graph))
-                    printf("Falha ao identificar os perfils dos usuários");
+                    printf("Falha ao identificar os perfis dos usuários");
                 break;
             case PRINT_SOCIAL_NETWORK:
                 graph_print(graph);
