@@ -19,5 +19,6 @@
 
     int graph_friendship_suggestion(GRAPH* graph);
     int graph_detect_low_affinity(GRAPH* graph);
+    int graph_identify_user_profile(GRAPH* graph);
     
 #endif
