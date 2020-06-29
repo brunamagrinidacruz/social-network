@@ -190,3 +190,52 @@ void graph_print_users(GRAPH* graph) {
     }
     return;
 }
+
+int graph_friendship_suggestion(GRAPH* graph) {
+    if (!graph_empty(graph)) {
+        int n_friendship;
+        float affinity_users;
+        NODE* node = graph->head->next;
+        NODE* node_possible_friend;
+
+        while (node != NULL) {
+            printf("Sugestão de amizadade verdadeira para o usuário %s:\n", user_username(node->user));
+            n_friendship = 0;
+            node_possible_friend = graph->head->next;
+            while (node_possible_friend != NULL) {
+                if (!list_search_user(node->adjacency_list, node_possible_friend->user) && node_possible_friend != node) {
+                    affinity_users = affinity(node->user, node_possible_friend->user);
+                    if (affinity_users >= TRUE_FRIENDSHIP) {
+                        printf("  %s, afinidade = %.2f%%\n\n", user_username(node_possible_friend->user), affinity_users);
+                        n_friendship++;
+                    }
+                }
+                node_possible_friend = node_possible_friend->next;
+            }
+
+            if (n_friendship == 0)
+                printf("  Nenhuma sugestão de amizade verdadeira.\n\n");
+
+            node = node->next;
+        }
+
+        return 1;
+    }
+    return 0;
+}
+
+int graph_detect_low_affinity(GRAPH* graph) {
+    if (!graph_empty(graph)) {
+        NODE* node = graph->head->next;
+
+        while (node != NULL) {
+            printf("Amizades de baixa afinidade do usuário %s:\n", user_username(user_username));
+            list_friendship_low_affinity(node->adjacency_list, node->user);
+            printf("\n");
+            node = node->next;
+        }
+
+        return 1;
+    }
+    return 0;
+}

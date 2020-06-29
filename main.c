@@ -28,10 +28,12 @@ int main(void) {
     USER* magrini = user_create("Bruna\0", "feminino\0", 19, "barbie\0", "bar do zé\0", "1984\0", "cinema\0", "corrida\0");
     USER* marlon = user_create("Marlon\0", "masculino\0", 19, "vingadores\0", "praça xv\0", "feliz ano velho\0", "leitura\0", "ping pong\0");
     USER* feliz = user_create("Feliz\0", "masculino\0", 21, "barbie\0", "usp\0", "design is my passion\0", "lol\0", "lol\0");
+    USER* wellington = user_create("Wellington\0", "masculino\0", 21, "barbie\0", "usp\0", "design is my passion\0", "lol\0", "lol\0");
 
     graph_insert_vertex(graph, magrini);
     graph_insert_vertex(graph, marlon);
     graph_insert_vertex(graph, feliz);
+    graph_insert_vertex(graph, wellington);
 
     graph_insert_edge(graph, "Bruna\0", "Marlon\0");
     graph_insert_edge(graph, "Bruna\0", "Feliz\0");
@@ -52,10 +54,12 @@ int main(void) {
                     printf("Falha ao fazer a amizade.\n");
                 break;
             case FRIENDSHIP_SUGGESTION:
-                
+                if(!graph_friendship_suggestion(graph))
+                    printf("Falha ao sugerir amidades verdadeiras.\n");
                 break;
             case DETECT_LOW_AFFINITY:
-                printf("3\n");
+                if(!graph_detect_low_affinity(graph))
+                    printf("Falha ao detectar amizades de baixa afinidade.\n");
                 break;
             case IDENTIFY_USER_PROFILE:
                 printf("4\n");
