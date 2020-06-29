@@ -100,14 +100,18 @@ int list_search_user(LIST* list, USER* user) {
     return 0;
 }
 
+/*
+ * Função que imprime os usuários de baixa afinidade dado uma lista e um usuário para ter como comparação.
+ */
 int list_friendship_low_affinity(LIST* list, USER* user) {
     if (!list_empty(list)) {
         float affinity_users;
-        int n_friendship_low_affinity = 0;
+        int n_friendship_low_affinity = 0; /*!< número de amizade de baixa afinidade */
         NODE* node = list->head->next;
 
         while (node != NULL) {
             affinity_users = affinity(node->user, user);
+            /*!< se afinididade < amizade verdadeira (60.00%) */
             if (affinity_users < TRUE_FRIENDSHIP) {
                 printf("  %s, afinidade: %.2f%%\n", user_username(node->user), affinity_users);
                 n_friendship_low_affinity++;
