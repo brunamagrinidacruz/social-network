@@ -14,7 +14,7 @@
     int list_insert(LIST* list, USER* user, float affinity);
 
     int list_size(LIST* list);
-    void list_print(LIST* list);
+    int list_print(LIST* list);
 
     int list_search_user(LIST* list, USER* user);
 

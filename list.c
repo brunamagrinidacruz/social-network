@@ -68,22 +68,23 @@ int list_size(LIST* list) {
     }
 }
 
-void list_print(LIST* list) {
-    if(list != NULL) {
+int list_empty(LIST* list) {
+    if (list != NULL && list->size > 0)
+        return 0;
+    return 1;
+}
+
+int list_print(LIST* list) {
+    if(!list_empty(list)) {
         int i;
         NODE* aux = list->head->next;
         while(aux != NULL) {
             printf("  Usuário: %s com afinidade de %.2f%% \n", user_username(aux->user), aux->weight);
             aux = aux->next;
-        }      
+        }
+        return 1;    
     }
-    return;
-}
-
-int list_empty(LIST* list) {
-    if (list != NULL && list->size > 0)
-        return 0;
-    return 1;
+    return 0;
 }
 
 int list_search_user(LIST* list, USER* user) {

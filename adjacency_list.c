@@ -170,7 +170,8 @@ void graph_print(GRAPH* graph) {
         NODE* aux = graph->head->next;
         while(aux != NULL) {
             printf("Lista de amizade do usuário %s:\n", user_username(aux->user));
-            list_print(aux->adjacency_list);
+            if(!list_print(aux->adjacency_list))
+                printf("  Nenhuma amizade.\n");
             aux = aux->next;
             printf("\n");
         }
