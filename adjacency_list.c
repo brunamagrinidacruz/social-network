@@ -141,7 +141,11 @@ int graph_insert_edge(GRAPH* graph, char username1[], char username2[]) {
         float affinity_users = affinity(node1->user, node2->user);
         int request;
 
-        printf("A chance dessa amizade ser verdadeira é de %.2f%%\n", affinity_users);
+        printf("A chance dessa amizade ser verdadeira é de %.2f%% e ", affinity_users);
+        if(affinity_users >= TRUE_FRIENDSHIP) 
+            printf("por isso recomendamos vocês se tornarem amigos e se conheçam melhor!\n");
+        else
+            printf("por isso não recomendamos vocês se tornarem amigos. Você pode verificar as sugestões de possíveis novos 'amigos de verdade'.\n");
         printf("O usuário %s deseja aceitar a solicitação? (1 - Sim, 0 - Não): ", username2);
         scanf("%d", &request);
 
