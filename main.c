@@ -100,31 +100,23 @@ void initialize_profiles(GRAPH* graph) {
             while(hasRows) {
                 /*!< Lendo o nome de usuário */
                 read_line(file, username);
-                printf("%s\n", username);
                 /*!< Lendo o gênero */
                 read_line(file, gender);
-                printf("%s\n", gender);
                 /*!< Lendo a idade */
                 read_line(file, age);
-                printf("%s\n", age);
                 /*!< Lendo o filme favorito */
                 read_line(file, movie);
-                printf("%s\n", movie);
                 /*!< Lendo o place favorito */
                 read_line(file, place);
-                printf("%s\n", place);
                 /*!< Lendo o book favorito */
                 read_line(file, book);
-                printf("%s\n", book);
                 /*!< Lendo o hobby favorito */
                 read_line(file, hobby);
-                printf("%s\n", hobby);
                 /*!< Lendo o sport favorito */
                 read_line(file, sport);
-                printf("%s\n", sport);
-                hasRows = jump_line(file);
                 user = user_create(username, gender, atoi(age), movie, place, book, hobby, sport);
                 graph_insert_vertex(graph, user);
+                hasRows = jump_line(file);
             }
         }
 
@@ -135,56 +127,47 @@ void initialize_profiles(GRAPH* graph) {
 int main(void) {
 
     GRAPH* graph = graph_create();
-    // char username1[MAX_SIZE_USERNAME], username2[MAX_SIZE_USERNAME];
+    char username1[MAX_SIZE_USERNAME], username2[MAX_SIZE_USERNAME];
 
+    /*!< Ler arquivo de dados que contem os perfils */
     initialize_profiles(graph);
-    graph_print(graph);
 
-    // USER* magrini = user_create("Bruna\0", "feminino\0", 19, "barbie\0", "bar do zé\0", "1984\0", "cinema\0", "corrida\0");
-    // USER* marlon = user_create("Marlon\0", "masculino\0", 19, "vingadores\0", "praça xv\0", "feliz ano velho\0", "leitura\0", "ping pong\0");
-    // USER* feliz = user_create("Feliz\0", "masculino\0", 21, "barbie\0", "usp\0", "design is my passion\0", "lol\0", "lol\0");
+    int operation;
+    print_menu();
+    scanf("%d", &operation);
 
-    // graph_insert_vertex(graph, magrini);
-    // graph_insert_vertex(graph, marlon);
-    // graph_insert_vertex(graph, feliz);
-
-    // graph_insert_edge(graph, "Bruna\0", "Marlon\0");
-    // graph_insert_edge(graph, "Bruna\0", "Feliz\0");
-
-    // int operation;
-    // print_menu();
-    // scanf("%d", &operation);
-
-    // while(operation != END) {
-    //     switch(operation) {
-    //         case SEND_INVITE:
-    //             graph_print_users(graph);
-    //             printf("Amizade entre os usuários: ");
-    //             scanf("%s %s", username1, username2);
-    //             if (!graph_insert_edge(graph, username1, username2))
-    //                 printf("Falha ao fazer a amizade.\n");
-    //             break;
-    //         case FRIENDSHIP_SUGGESTION:
-                
-    //             break;
-    //         case DETECT_LOW_AFFINITY:
-    //             printf("3\n");
-    //             break;
-    //         case IDENTIFY_USER_PROFILE:
-    //             printf("4\n");
-    //             break;
-    //         case END:
-    //             printf("Até a próxima!\n");
-    //             break;
-    //         case PRINT_SOCIAL_NETWORK: //imprimir o grafo
-    //             graph_print(graph);
-    //             break;
-    //         default:
-    //             printf("Operação inválida!\n");
-    //     }
-    //     print_menu();
-    //     scanf("%d", &operation);
-    // }
+    while(operation != END) {
+        switch(operation) {
+            case SEND_INVITE:
+                graph_print_users(graph);
+                printf("Amizade entre os usuários: ");
+                scanf("%s %s", username1, username2);
+                if (!graph_insert_edge(graph, username1, username2))
+                    printf("Falha ao fazer a amizade.\n");
+                break;
+            case FRIENDSHIP_SUGGESTION:
+                if(!graph_friendship_suggestion(graph))
+                    printf("Falha ao sugerir amidades verdadeiras.\n");
+                break;
+            case DETECT_LOW_AFFINITY:
+                if(!graph_detect_low_affinity(graph))
+                    printf("Falha ao detectar amizades de baixa afinidade.\n");
+                break;
+            case IDENTIFY_USER_PROFILE:
+                printf("4\n");
+                break;
+            case END:
+                printf("Até a próxima!\n");
+                break;
+            case PRINT_SOCIAL_NETWORK:
+                graph_print(graph);
+                break;
+            default:
+                printf("Operação inválida!\n");
+        }
+        print_menu();
+        scanf("%d", &operation);
+    }
 
     graph_delete(&graph);
     
