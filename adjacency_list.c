@@ -229,8 +229,9 @@ int graph_detect_low_affinity(GRAPH* graph) {
         NODE* node = graph->head->next;
 
         while (node != NULL) {
-            printf("Amizades de baixa afinidade do usuário %s:\n", user_username(user_username));
-            list_friendship_low_affinity(node->adjacency_list, node->user);
+            printf("Amizades de baixa afinidade do usuário %s:\n", user_username(node->user));
+            if(!list_friendship_low_affinity(node->adjacency_list, node->user))
+                printf("  Nenhuma amizade de baixa afinidade.\n");
             printf("\n");
             node = node->next;
         }

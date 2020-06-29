@@ -99,7 +99,7 @@ int list_search_user(LIST* list, USER* user) {
     return 0;
 }
 
-void list_friendship_low_affinity(LIST* list, USER* user) {
+int list_friendship_low_affinity(LIST* list, USER* user) {
     if (!list_empty(list)) {
         float affinity_users;
         int n_friendship_low_affinity = 0;
@@ -114,7 +114,7 @@ void list_friendship_low_affinity(LIST* list, USER* user) {
             node = node->next;
         }
 
-        if (n_friendship_low_affinity == 0)
-            printf("  Nenhuma amizade de baixa afinidade.\n");
+        return n_friendship_low_affinity;
     }
+    return 0;
 }
