@@ -154,13 +154,14 @@ int main(void) {
                     printf("Falha ao detectar amizades de baixa afinidade.\n");
                 break;
             case IDENTIFY_USER_PROFILE:
-                printf("4\n");
-                break;
-            case END:
-                printf("Até a próxima!\n");
+                if(!graph_identify_user_profile(graph))
+                    printf("Falha ao identificar os perfils dos usuários");
                 break;
             case PRINT_SOCIAL_NETWORK:
                 graph_print(graph);
+                break;
+            case END:
+                printf("Até a próxima!\n");
                 break;
             default:
                 printf("Operação inválida!\n");

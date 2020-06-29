@@ -238,3 +238,23 @@ int graph_detect_low_affinity(GRAPH* graph) {
     }
     return 0;
 }
+
+/**
+ * Função que analisa o perfil dos usuários que estão no grafo.
+ * Recebe como parametro o grafo a ser analisado.
+*/
+int graph_identify_user_profile(GRAPH* graph) {
+    if(!graph_empty(graph)) {
+        NODE* node = graph->head->next;
+        /*!< Percorrendo entre todos os vértices do grafo */
+        while(node != NULL) {
+            printf("O usuário %s é ", user_username(node->user));
+            /*!< Analisando se o usuário é 'extrovertido' ou 'introverdo'*/
+            list_identify_user_profile(node->adjacency_list);
+            node = node->next;
+        }
+
+        return 1;
+    }
+    return 0;
+}
