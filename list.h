@@ -14,11 +14,11 @@
     int list_insert(LIST* list, USER* user, float affinity);
 
     int list_size(LIST* list);
-    void list_print(LIST* list);
+    int list_print(LIST* list);
 
     int list_search_user(LIST* list, USER* user);
 
-    void list_friendship_low_affinity(LIST* list, USER* user);
     void list_identify_user_profile(LIST* list);
+    int list_friendship_low_affinity(LIST* list, USER* user);
 
 #endif

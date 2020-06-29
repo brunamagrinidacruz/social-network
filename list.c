@@ -68,22 +68,23 @@ int list_size(LIST* list) {
     }
 }
 
-void list_print(LIST* list) {
-    if(list != NULL) {
+int list_empty(LIST* list) {
+    if (list != NULL && list->size > 0)
+        return 0;
+    return 1;
+}
+
+int list_print(LIST* list) {
+    if(!list_empty(list)) {
         int i;
         NODE* aux = list->head->next;
         while(aux != NULL) {
             printf("  Usuário: %s com afinidade de %.2f%% \n", user_username(aux->user), aux->weight);
             aux = aux->next;
-        }      
+        }
+        return 1;    
     }
-    return;
-}
-
-int list_empty(LIST* list) {
-    if (list != NULL && list->size > 0)
-        return 0;
-    return 1;
+    return 0;
 }
 
 int list_search_user(LIST* list, USER* user) {
@@ -99,7 +100,7 @@ int list_search_user(LIST* list, USER* user) {
     return 0;
 }
 
-void list_friendship_low_affinity(LIST* list, USER* user) {
+int list_friendship_low_affinity(LIST* list, USER* user) {
     if (!list_empty(list)) {
         float affinity_users;
         int n_friendship_low_affinity = 0;
@@ -114,8 +115,7 @@ void list_friendship_low_affinity(LIST* list, USER* user) {
             node = node->next;
         }
 
-        if (n_friendship_low_affinity == 0)
-            printf("  Nenhuma amizade de baixa afinidade.\n");
+        return n_friendship_low_affinity;
     }
 }
 
@@ -148,14 +148,14 @@ void list_identify_user_profile(LIST* list) {
         percentage = 100*amount_true_friends/list->size;
 
         if(percentage >= 50) 
-            printf("extroverdio\n");
+            printf("extroverdio.\n");
         else 
-            printf("introvertido\n");
+            printf("introvertido.\n");
 
         return;
     }
 
     /*!< Como o usuário não possui amigos, é introvertido */
-    printf("introvertido\n");
+    printf("introvertido.\n");
     return;
 }
