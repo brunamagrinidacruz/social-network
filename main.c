@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "algorithms.h"
 #include "adjacency_list.h"
 
 #define END 0
@@ -9,6 +10,7 @@
 #define IDENTIFY_USER_PROFILE 4
 #define PRINT_SOCIAL_NETWORK 5
 #define PRINT_SOCIAL_NETWORK_WITH_DETAILS 6
+#define DISTANCE_BETWEEN_USERS 7
 
 #define SIZE_TEXT 64
 
@@ -20,6 +22,7 @@ void print_menu() {
     printf("%d - Identificar perfil dos usuários\n", IDENTIFY_USER_PROFILE);
     printf("%d - Imprimir rede social\n", PRINT_SOCIAL_NETWORK);
     printf("%d - Imprimir usuários da rede social\n", PRINT_SOCIAL_NETWORK_WITH_DETAILS);
+    printf("%d - Calcule a distância entre dois usuários na rede social\n", DISTANCE_BETWEEN_USERS);
     printf("%d - Sair\n", END);
     printf("------------------------------------\n");
 }
@@ -83,6 +86,7 @@ void initialize_profiles(GRAPH* graph) {
         char file_name[SIZE_TEXT];
         
         USER* user;
+        int index = 0; /*!< Representa o índice do usuário na lista */ 
         char username[MAX_SIZE_USERNAME];
         char gender[MAX_SIZE_GENDER];
         char age[4]; /*!< O tamanho máximo de uma idade seria 3 digitos (até 150) e mais um para o \0 */
@@ -116,7 +120,8 @@ void initialize_profiles(GRAPH* graph) {
                 read_line(file, hobby);
                 /*!< Lendo o sport favorito */
                 read_line(file, sport);
-                user = user_create(username, gender, atoi(age), movie, place, book, hobby, sport);
+                user = user_create(index, username, gender, atoi(age), movie, place, book, hobby, sport);
+                index++;
                 graph_insert_vertex(graph, user);
                 hasRows = jump_line(file);
             }
@@ -164,6 +169,14 @@ int main(void) {
                 break;
             case PRINT_SOCIAL_NETWORK_WITH_DETAILS:
                 graph_print_details(graph);
+                break;
+            case DISTANCE_BETWEEN_USERS:
+                printf("Segundo a teoria dos seis graus de separação, no mundo, são necessários no máximo seis laços de amizade para que duas pessoas quaisquer estejam ligadas. ");
+                printf("Vamos verificar se essa teoria também se aplica a nossa rede social?\n");
+                printf("Digite o nome de dois usuários para verificar a distância entre eles: ");
+                scanf("%s %s", username1, username2);
+                if(!bfs(graph, username1, username2))
+                    printf("Falha ao calcular a distância entre os usuários %s e %s.\n", username1, username2);
                 break;
             case END:
                 printf("Até a próxima!\n");

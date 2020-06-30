@@ -77,9 +77,24 @@ int list_size(LIST* list) {
 
 int list_first_element(LIST* list) {
     if(!list_empty(list)) {
-        if(list->head->next != NULL) return list->head->next->id;
+        if(list->head->next != NULL) return user_id(list->head->next->user);
     }
     return -1;
+}
+
+int list_next_element(LIST* list, int *current_vertex, int *next_vertex) {
+    if(!list_empty(list)) {
+        NODE* aux = list->head->next;
+        *current_vertex = *next_vertex;
+
+        while(aux != NULL && user_id(aux->user) != (*current_vertex)) aux = aux->next;
+        
+        if(aux != NULL && aux->next != NULL) {
+            *next_vertex = user_id(aux->next->user);
+            return 0; //It's not the end of the list
+        }
+    }
+    return 1; //The end of the list
 }
 
 int list_print(LIST* list) {

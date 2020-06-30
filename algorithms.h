@@ -3,9 +3,10 @@
 
     #include <stdio.h>
     #include <stdlib.h>
+    #include <string.h>
     #include "adjacency_list.h"
     #include "queue.h"
 
-    void bfs(GRAPH* graph);
+    int bfs(GRAPH* graph, char username1[], char username2[]);
 
 #endif

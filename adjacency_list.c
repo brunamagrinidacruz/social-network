@@ -35,6 +35,7 @@ struct graph_ {
     int number_of_vertices;
     NODE* head;
     NODE* foot;
+    int last_index;
 };
 
 NODE* node_create(USER* user) {
@@ -105,6 +106,23 @@ NODE* graph_search_node(GRAPH* graph, char username[]) {
             return node;
     }
     return NULL;
+}
+
+/**
+ * Recebe como parametro um grafo e o nome de usuário
+ * Retorna a posição do usuário na lista de vértices do grafo (ou seja, o id)
+*/
+int graph_search_index(GRAPH* graph, char username[]) {
+    if (!graph_empty(graph)) {
+        NODE* node = graph->head->next;
+
+        while (node != NULL && strcmp(user_username(node->user), username) != 0)
+            node = node->next;
+
+        if (node != NULL)
+            return user_id(node->user);
+    }
+    return -1;
 }
 
 int graph_insert_edge(GRAPH* graph, char username1[], char username2[]) {
@@ -304,7 +322,13 @@ int graph_first_vertex_list_adjacency(GRAPH* graph, int vertex) {
 }
 
 int graph_next_vertex_list_adjacency(GRAPH* graph, int vertex, int *current_vertex, int *next_vertex) {
-    if(graph != NULL) {
-        return list_next_element(graph->adjacency_list[vertex], current_vertex, next_vertex);
+    if(!graph_empty(graph)) {
+        NODE* node = graph->head->next;
+        while(vertex != 0) {
+            node = node->next;
+            vertex--;
+        }
+        return list_next_element(node->adjacency_list, current_vertex, next_vertex);
     }
+    return 1;
 }

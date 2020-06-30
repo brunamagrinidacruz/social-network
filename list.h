@@ -22,5 +22,6 @@
     int list_friendship_low_affinity(LIST* list, USER* user);
 
     int list_first_element(LIST* list);
+    int list_next_element(LIST* list, int *current_vertex, int *next_vertex);
 
 #endif
