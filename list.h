@@ -21,4 +21,6 @@
     void list_identify_user_profile(LIST* list);
     int list_friendship_low_affinity(LIST* list, USER* user);
 
+    int list_first_element(LIST* list);
+
 #endif

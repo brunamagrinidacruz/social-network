@@ -62,16 +62,24 @@ int list_insert(LIST* list, USER* user, float affinity) {
     return 0;
 }
 
-int list_size(LIST* list) {
-    if(list != NULL) {
-        return list->size;
-    }
-}
-
 int list_empty(LIST* list) {
     if (list != NULL && list->size > 0)
         return 0;
     return 1;
+}
+
+int list_size(LIST* list) {
+    if(!list_empty(list)) {
+        return list->size;
+    }
+    return 0;
+}
+
+int list_first_element(LIST* list) {
+    if(!list_empty(list)) {
+        if(list->head->next != NULL) return list->head->next->id;
+    }
+    return -1;
 }
 
 int list_print(LIST* list) {

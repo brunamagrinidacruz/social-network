@@ -21,5 +21,8 @@
     int graph_friendship_suggestion(GRAPH* graph);
     int graph_detect_low_affinity(GRAPH* graph);
     int graph_identify_user_profile(GRAPH* graph);
+
+    int graph_is_adjacency_list_empty(GRAPH* graph, int vertex);
+    int graph_first_vertex_list_adjacency(GRAPH* graph, int vertex);
     
 #endif
