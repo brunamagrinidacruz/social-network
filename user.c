@@ -1,6 +1,7 @@
 #include "user.h"
 
 struct user_ {
+    int id;
     char username[MAX_SIZE_USERNAME];
     char gender[MAX_SIZE_GENDER];
     int age;
@@ -12,9 +13,10 @@ struct user_ {
     char sport[MAX_SIZE_WORD];
 };
 
-USER* user_create(char username[MAX_SIZE_USERNAME], char gender[MAX_SIZE_GENDER], int age, char movie[MAX_SIZE_WORD], char place[MAX_SIZE_WORD], char book[MAX_SIZE_WORD], char hobby[MAX_SIZE_WORD], char sport[MAX_SIZE_WORD]) {
+USER* user_create(int id, char username[MAX_SIZE_USERNAME], char gender[MAX_SIZE_GENDER], int age, char movie[MAX_SIZE_WORD], char place[MAX_SIZE_WORD], char book[MAX_SIZE_WORD], char hobby[MAX_SIZE_WORD], char sport[MAX_SIZE_WORD]) {
     USER* user = (USER*) malloc(sizeof(USER));
     if (user != NULL) {
+        user->id = id;
         user->age = age;
         strcpy(user->username, username);
         strcpy(user->gender, gender);
@@ -49,6 +51,12 @@ float affinity(USER* user1, USER* user2) {
         similar_preferences++;
 
     return (similar_preferences*100)/AMOUNT_USER_PARAMETERS;
+}
+
+int user_id(USER* user) {
+    if (user != NULL)
+        return user->id;
+    return -1;
 }
 
 int user_age(USER* user) {
