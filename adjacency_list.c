@@ -219,7 +219,7 @@ int graph_friendship_suggestion(GRAPH* graph) {
                     affinity_users = affinity(node->user, node_possible_friend->user);
                     /*!< Se afinidade >= amizade verdadeira (60.00) */
                     if (affinity_users >= TRUE_FRIENDSHIP) {
-                        printf("  %s, afinidade = %.2f%%\n\n", user_username(node_possible_friend->user), affinity_users);
+                        printf("  %s, afinidade = %.2f%%\n", user_username(node_possible_friend->user), affinity_users);
                         n_friendship++;
                     }
                 }
@@ -227,8 +227,9 @@ int graph_friendship_suggestion(GRAPH* graph) {
             }
 
             if (n_friendship == 0)
-                printf("  Nenhuma sugestão de amizade verdadeira.\n\n");
-
+                printf("  Nenhuma sugestão de amizade verdadeira.\n");
+        
+            printf("\n");    
             node = node->next;
         }
 
@@ -276,4 +277,34 @@ int graph_identify_user_profile(GRAPH* graph) {
         return 1;
     }
     return 0;
+}
+
+int graph_is_adjacency_list_empty(GRAPH* graph, int vertex) {
+    if(!graph_empty(graph)) {
+        NODE* node = graph->head->next;
+        while(vertex != 0) {
+            node = node->next;
+            vertex--;
+        }
+        return list_size(node->adjacency_list) == 0;
+    }
+    return 1;
+}
+
+int graph_first_vertex_list_adjacency(GRAPH* graph, int vertex) {
+    if(!graph_empty(graph)) {
+        NODE* node = graph->head->next;
+        while(vertex != 0) {
+            node = node->next;
+            vertex--;
+        }
+        return list_first_element(node->adjacency_list);
+    }
+    return -1;
+}
+
+int graph_next_vertex_list_adjacency(GRAPH* graph, int vertex, int *current_vertex, int *next_vertex) {
+    if(graph != NULL) {
+        return list_next_element(graph->adjacency_list[vertex], current_vertex, next_vertex);
+    }
 }
