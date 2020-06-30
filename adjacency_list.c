@@ -2,21 +2,6 @@
 #include "list.h"
 
 /**
- * A primeira ideia do grafo foi armazenar na aresta o indice de quem a pessoa estava relacionada.
- * Entretanto, ao fazer uma análise em uma pessoa em especifico (um vértice da lista),
- * se quisessemos obter informações sobre a pessoa com quem está conectado, seria necessário
- * percorrer a lista de usuários novamente (tendo em vista que é uma lista dinâmica)
- * para encontrar as informações da pessoa associada. Por isso, decidimos optar por em cada aresta,
- * armazenar o endereço da pessoa com quem está se relacionando.
- *     (USER)     (index do usuário)
- * [0] Magrini -> 1, 2 //Magrini está conectada com Marlon e Feliz
- * [1] Marlon  -> 0, 2 //Marlon está conectado com Magrini e Feliz
- * [2] Feliz   -> 0, 1, 3 //Feliz está conectado com Magrini e Marlon
- * [3] Breno   -> 2    //Breno está conectado com o Feliz
- * [4] Matheus -> NULL //Matheus não está conectado com ninguém
-*/
-
-/**
  * A ideia do grafo será essa:
  *     (USER)  (Endereço do usuáro)
  * Magrini -> &Marlon, &Feliz, &Matheus 
@@ -45,6 +30,7 @@ struct node_ {
  * pois ela apenas olha a lista de adjacência do grafo O(grau do vértice), enquanto na matriz de adjacência deveria 
  * ser olhado todo os |V| vértices na matriz relacionados com o vértice, ou seja O(|V|)
 */
+
 struct graph_ {
     int number_of_vertices;
     NODE* head;
@@ -190,6 +176,24 @@ void graph_print_users(GRAPH* graph) {
         while (node != NULL) {
             printf("Nome do usuário: %s\n", user_username(node->user));
             node = node->next;
+        }
+    }
+    return;
+}
+
+/**
+ * Recebe como parametro um grafo.
+ * Imprime todos os atributos de todos os usuários do grafo.
+*/
+void graph_print_details(GRAPH* graph) {
+    if(graph != NULL) {
+        int i;
+        NODE* aux = graph->head->next;
+        while(aux != NULL) {
+            printf("%s\n", user_username(aux->user));
+            user_print(aux->user);
+            printf("\n");
+            aux = aux->next;
         }
     }
     return;

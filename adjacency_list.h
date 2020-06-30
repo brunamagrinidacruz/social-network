@@ -16,6 +16,7 @@
     int graph_number_of_vertices(GRAPH* graph);
     void graph_print(GRAPH* graph);
     void graph_print_users(GRAPH* graph);
+    void graph_print_details(GRAPH* graph);
 
     int graph_friendship_suggestion(GRAPH* graph);
     int graph_detect_low_affinity(GRAPH* graph);

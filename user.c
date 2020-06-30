@@ -19,7 +19,7 @@ USER* user_create(char username[MAX_SIZE_USERNAME], char gender[MAX_SIZE_GENDER]
         strcpy(user->username, username);
         strcpy(user->gender, gender);
         strcpy(user->movie, movie);
-        strcpy(user->place, book);
+        strcpy(user->place, place);
         strcpy(user->book, book);
         strcpy(user->hobby, hobby);
         strcpy(user->sport, sport);
@@ -101,7 +101,7 @@ char* user_sport(USER* user) {
 
 void user_print(USER* user) {
     if (user != NULL) 
-        printf("username: %s,\ngender: %s,\nage: %d,\nmovie: %s,\nplace: %s,\nbook: %s,\nhobby: %s,\nsport: %s.\n", user->username, user->gender, user->age, user->movie, user->place, user->book, user->hobby, user->sport);
+        printf("  Nome de usuário: %s\n  Gênero: %s\n  Idade: %d\n  Filme predileto: %s\n  Local predileto: %s\n  Livro: %s\n  Hobby: %s\n  Esporte: %s\n", user->username, user->gender, user->age, user->movie, user->place, user->book, user->hobby, user->sport);
     return;
 }
 

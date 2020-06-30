@@ -8,6 +8,7 @@
 #define DETECT_LOW_AFFINITY 3
 #define IDENTIFY_USER_PROFILE 4
 #define PRINT_SOCIAL_NETWORK 5
+#define PRINT_SOCIAL_NETWORK_WITH_DETAILS 6
 
 #define SIZE_TEXT 64
 
@@ -18,6 +19,7 @@ void print_menu() {
     printf("%d - Detectar baixa afinidade\n", DETECT_LOW_AFFINITY);
     printf("%d - Identificar perfil dos usuários\n", IDENTIFY_USER_PROFILE);
     printf("%d - Imprimir rede social\n", PRINT_SOCIAL_NETWORK);
+    printf("%d - Imprimir usuários da rede social\n", PRINT_SOCIAL_NETWORK_WITH_DETAILS);
     printf("%d - Sair\n", END);
     printf("------------------------------------\n");
 }
@@ -71,7 +73,7 @@ int jump_line(FILE* file){
 /**
  * Função responsável por ler o arquivo e inserir os valores iniciais no grafo.
  * Recebe como parametro o grafo onde serão inseridos os usuários.
- * O arquivo deve conter os 7 itens para cada usuário: nome, gênero, idade, filme, local, livro, hobby e esporte em ordem
+ * O arquivo deve conter os 8 itens para cada usuário: nome, gênero, idade, filme, local, livro, hobby e esporte em ordem
  * e deve ter um espaço entre cada usuário. No usuário final, deve ter um espaço também.
  * O arquivo não pode estar vazio.
 */
@@ -159,6 +161,9 @@ int main(void) {
                 break;
             case PRINT_SOCIAL_NETWORK:
                 graph_print(graph);
+                break;
+            case PRINT_SOCIAL_NETWORK_WITH_DETAILS:
+                graph_print_details(graph);
                 break;
             case END:
                 printf("Até a próxima!\n");
