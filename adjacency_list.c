@@ -219,7 +219,7 @@ int graph_friendship_suggestion(GRAPH* graph) {
                     affinity_users = affinity(node->user, node_possible_friend->user);
                     /*!< Se afinidade >= amizade verdadeira (60.00) */
                     if (affinity_users >= TRUE_FRIENDSHIP) {
-                        printf("  %s, afinidade = %.2f%%\n\n", user_username(node_possible_friend->user), affinity_users);
+                        printf("  %s, afinidade = %.2f%%\n", user_username(node_possible_friend->user), affinity_users);
                         n_friendship++;
                     }
                 }
@@ -228,7 +228,9 @@ int graph_friendship_suggestion(GRAPH* graph) {
 
             if (n_friendship == 0)
                 printf("  Nenhuma sugestão de amizade verdadeira.\n\n");
-
+            else
+                printf("\n");
+                
             node = node->next;
         }
 
