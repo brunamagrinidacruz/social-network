@@ -15,7 +15,7 @@
 #define SIZE_TEXT 64
 
 void print_menu() {
-    printf("------------------------------------\n");
+    printf("-----------------------------------------------------------\n");
     printf("%d - Enviar convite\n", SEND_INVITE);
     printf("%d - Sugestão de 'amigos de verdade'\n", FRIENDSHIP_SUGGESTION);
     printf("%d - Detectar baixa afinidade\n", DETECT_LOW_AFFINITY);
@@ -24,7 +24,7 @@ void print_menu() {
     printf("%d - Imprimir usuários da rede social\n", PRINT_SOCIAL_NETWORK_WITH_DETAILS);
     printf("%d - Calcule a distância entre dois usuários na rede social\n", DISTANCE_BETWEEN_USERS);
     printf("%d - Sair\n", END);
-    printf("------------------------------------\n");
+    printf("-----------------------------------------------------------\n");
 }
 
 /**
