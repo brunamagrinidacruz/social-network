@@ -1,4 +1,4 @@
-Trabalho relacionado a matéria de Modelagem Computacional em Grafos do curso de Ciências de Computação da USP São Carlos.
+Trabalho relacionado a matéria de Modelagem Computacional em Grafos (SCC0216) do curso de Ciências de Computação da USP São Carlos.
 
 O trabalho consiste de uma rede social para alunos USP. 
 
